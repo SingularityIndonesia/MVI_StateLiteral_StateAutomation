@@ -8,51 +8,75 @@ This project promote MVI + Literal State + State Automation Pattern designed by 
 This pattern targetting simplicity and less side effect. The idea of this pattern is:
 
 1. Use intent to comunicate with viewmodel instead of triggering direct action via viewModel's APIs.
-2. ViewModel as abstract presentation. It means that view model is the ultimate source of truth of what we see in the presentation.
+2. ViewModel as abstract presentation. It means that view model is the ultimate source of truth of what we see in the presentation. The purpose is to reduce interface coupling between modules with direct dependency like the ViewModel.
 3. State Automation: Every state in the viewmodel must thinking on it self. It cannot changed by using side effect. The state collecting information by them self and decide whether they should change or not - by it self.
+   ```kotlin
+   val SubmitButtonState = combine(
+        EmailValidation,
+        PasswordValidation,
+        SubmitDataState
+    ) { emailIsValid, passwordIsValid, submitDataState ->
+        val dataIsValid = emailIsValid.isBlank() && passwordIsValid.isBlank()
+        Pair(dataIsValid, submitDataState)
+    }.scan(
+        ButtonState(enable = false) // default button state
+    ) { prev, it ->
+        val (dataIsValid, submitDataState) = it
+        prev.copy(
+            enable = dataIsValid,
+            loading = submitDataState.contains("Loading")
+        )
+    }.flowOn(Dispatchers.IO)
+   ```
 4. Literal State: It means that state in viewmodel must not requires extra process to be represented to the screen.
+   A literal state is a representation of what you literally see on the screen.
+   ```kotlin
+   val ErrorToast = SubmitDataState
+      .filter { it.contains("Error") }
+      .flowOn(Dispatchers.IO)
+   ```
 
 ## ALSO:
-6. Fine graining setup. every component on the screen must be set individualy and separately. example:
+5. Fine graining setup. every component on the screen must be set individualy and separately. example:
 
-INSTEAD OF DOING:
-```kotlin
-
-fun initData {
-  .. side effect to button
-  .. side effect to the form
-  .. etc
-}
-
-fun initObserver {
-  .. apply to button
-  .. apply to the form
-  .. etc
-}
-
-fun initUI {
-  .. apply to button
-  .. apply to the form
-  .. etc
-}
-
-fun initAction {
-  .. observe on the form -> side effect to the button
-  .. observe on the button -> side effect to ....
-}
-```
-
-WE DO:
-```kotlin
-fun setupSubmitButton() {
-  .. observe button -> send event / intent
-  .. observe viewmodel state -> apply to button
-}
-
-fun setupInput1() {
-  .. observe on input -> save state to viewmodel
-  .. observe viewmodel state -> apply to input
-}
-
-.. etc
-```
+    INSTEAD OF DOING:
+    ```kotlin
+    
+    fun initData {
+      .. side effect to button
+      .. side effect to the form
+      .. etc
+    }
+    
+    fun initObserver {
+      .. apply to button
+      .. apply to the form
+      .. etc
+    }
+    
+    fun initUI {
+      .. apply to button
+      .. apply to the form
+      .. etc
+    }
+    
+    fun initAction {
+      .. observe on the form -> side effect to the button
+      .. observe on the button -> side effect to ....
+    }
+    ```
+    
+    WE DO:
+    ```kotlin
+    fun setupSubmitButton() {
+      .. observe button -> send event / intent
+      .. observe viewmodel state -> apply to button
+    }
+    
+    fun setupInput1() {
+      .. observe on input -> save state to viewmodel
+      .. observe viewmodel state -> apply to input
+    }
+    
+    .. etc
+    ```

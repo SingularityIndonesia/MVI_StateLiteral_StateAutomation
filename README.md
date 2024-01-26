@@ -62,7 +62,9 @@ This pattern targetting simplicity and less side effect. The idea of this patter
    ```
 
 ## ALSO:
-5. Fine graining setup. every component on the screen must be set individualy and separately. example:
+5. Fine graining setup. every component on the screen must be set individualy and separately. 
+   This will eliminate side effect spreading, and make it easier to migrate to declarative programming later.
+   example:
 
     INSTEAD OF DOING:
     ```kotlin

@@ -148,7 +148,7 @@ class Screen1ViewModel : ViewModel() {
                 }
             }
             // Adding Default state is a MUST!
-            // Without default state, another state that using combine() will not emit anything until this state emit something.
+            // Without default state, another state that consumes this state using combine() will not emit anything until this state emit something.
             .scan("Idle") { prev, new ->
                 new
             }
@@ -173,4 +173,14 @@ class Screen1ViewModel : ViewModel() {
             loading = submitDataState.contains("Loading")
         )
     }.flowOn(Dispatchers.IO)
+
+    val SubmitButtonText = SubmitButtonState
+        .map {
+            if (it.loading) {
+                return@map "Loading..."
+            }
+
+            return@map "Submit"
+        }
+        .flowOn(Dispatchers.IO)
 }

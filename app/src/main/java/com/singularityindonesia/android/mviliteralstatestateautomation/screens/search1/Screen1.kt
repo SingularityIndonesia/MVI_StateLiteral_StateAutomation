@@ -136,10 +136,17 @@ class Screen1 : Fragment() {
                 binding.btnSubmit
                     .apply {
                         isEnabled = submitButtonState.enable
-                        text = if (submitButtonState.loading) "Loading..." else "Submit"
                         isClickable = submitButtonState.enable && !submitButtonState.loading
                     }
 
+            }
+        )
+
+        // button text
+        collect(
+            state = vm.SubmitButtonText,
+            collector = { submitButtonText ->
+                binding.btnSubmit.text = submitButtonText
             }
         )
     }

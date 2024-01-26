@@ -31,6 +31,7 @@ This pattern targetting simplicity and less side effect. The idea of this patter
 4. Literal State: It means that state in viewmodel must not requires extra process to be represented to the screen.
    A literal state is a representation of what you literally see on the screen.
    ```kotlin
+    // Literally the button state you see on the screen
     val SubmitButtonState = combine(
         EmailValidation,
         PasswordValidation,
@@ -48,6 +49,7 @@ This pattern targetting simplicity and less side effect. The idea of this patter
         )
     }.flowOn(Dispatchers.IO)
 
+    // Literally the text you see on the screen.
     val SubmitButtonText = SubmitButtonState
         .map {
             if (it.loading) {

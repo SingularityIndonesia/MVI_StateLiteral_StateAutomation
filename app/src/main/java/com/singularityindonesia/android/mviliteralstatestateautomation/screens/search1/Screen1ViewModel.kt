@@ -118,10 +118,6 @@ class Screen1ViewModel : ViewModel() {
             email to password to dataIsValid to signature
         }
             .flowOn(Dispatchers.IO)
-            // skip Idle state
-            .filter { data ->
-                data.second != "Idle"
-            }
             // skip if signature is not changed
             .distinctUntilChanged { oldData, newData ->
                 oldData.second == newData.second
@@ -130,6 +126,12 @@ class Screen1ViewModel : ViewModel() {
             .cancellable()
             .flatMapLatest { data ->
                 flow {
+                    // skip idle state
+                    if (data.second == "Idle") {
+                        emit("Idle")
+                        return@flow
+                    }
+
                     if (!data.first.second) {
                         emit("Error: data invalid")
                         return@flow
@@ -147,11 +149,14 @@ class Screen1ViewModel : ViewModel() {
 
                 }
             }
-            // Adding Default state is a MUST!
-            // Without default state, another state that consumes this state using combine() will not emit anything until this state emit something.
-            .scan("Idle") { prev, new ->
-                new
-            }
+            // You might need to add default state to this state if in case your state consumer that using `combine()` operator didn't trigger anything.
+            // It is because the combine operator requires all of its state to emit something before it can emit anything.
+            // Without default state, if you are using filter or distinctUntilChange or cancelable or skip-able operation,
+            // another state that consumes that state using combine() will not emit anything until this state emits something.
+            // ex:
+            // .scan("Idle") { prev, new ->
+            //    new
+            // }
 
     val ErrorToast = SubmitDataState
         .filter { it.contains("Error") }

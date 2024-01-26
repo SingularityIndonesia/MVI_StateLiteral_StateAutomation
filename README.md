@@ -43,26 +43,26 @@ This pattern targetting simplicity and less side effect. The idea of this patter
     ```kotlin
     
     fun initData {
-      .. side effect to button
-      .. side effect to the form
+      .. side effect to button     // side effect to the button in multiple different places
+      .. side effect to the form   // side effect to the form in multiple different places
       .. etc
     }
     
     fun initObserver {
-      .. apply to button
-      .. apply to the form
+      .. apply to button           // side effect to the button in multiple different places
+      .. apply to the form         // side effect to the form in multiple different places
       .. etc
     }
     
     fun initUI {
-      .. apply to button
-      .. apply to the form
+      .. apply to button           // side effect to the button in multiple different places
+      .. apply to the form         // side effect to the form in multiple different places
       .. etc
     }
     
     fun initAction {
-      .. observe on the form -> side effect to the button
-      .. observe on the button -> side effect to ....
+      .. observe on the form -> side effect to the button   // side effect to the button in multiple different places
+      .. observe on the button -> side effect to ....       // side effect to the form in multiple different places
     }
     ```
     

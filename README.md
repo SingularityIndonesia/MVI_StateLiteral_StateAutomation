@@ -7,8 +7,8 @@ This is sample android project for a Pattern Guideline.
 This project promote MVI + Literal State + State Automation Pattern designed by me.
 This pattern targetting simplicity and less side effect. The idea of this pattern is:
 
-1. Use intent to comunicate with viewmodel instead of triggering direct action via viewModel's APIs.
-2. ViewModel as abstract presentation. It means that view model is the ultimate source of truth of what we see in the presentation. The purpose is to reduce interface coupling between modules with direct dependency like the ViewModel.
+1. Use intent to comunicate with viewmodel instead of triggering direct action via viewModel's APIs. The purpose is to reduce interface coupling between modules with direct dependency like the ViewModel.
+2. ViewModel as abstract presentation. It means that view model is the ultimate source of truth of what we see in the presentation. 
 3. State Automation: Every state in the viewmodel must thinking on it self. It cannot changed by using side effect. The state collecting information by them self and decide whether they should change or not - by it self.
    ```kotlin
    val SubmitButtonState = combine(

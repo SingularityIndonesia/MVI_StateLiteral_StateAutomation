@@ -1,7 +1,7 @@
 Author: [Stefanus Ayudha](https://github.com/stefanusayudha) <br>
 ©January2024 stefanus.ayudha@gmail.com
 
-# MVI + State Automation + Literal State PATTERN
+# MVI + Literal State + State Automation PATTERN
 This is sample android project for a Pattern Guideline.
 
 This project promote MVI + Literal State + State Automation Pattern designed by me.
